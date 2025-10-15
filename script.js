@@ -4,7 +4,7 @@ const resultScreen = document.getElementById("result-screen")
 const resultContent = document.getElementById("result-content")
 
 let caughtFlowers = 0
-const totalFlowers = 31
+const totalFlowers = 15
 let gameActive = true
 let flowers = []
 
