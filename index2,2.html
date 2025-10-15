@@ -190,7 +190,7 @@
         <div id="game-info">
             <h1>🌸 Bắt Lấy Bông Hoa Sẽ có Bất Ngờ Nhé Người Đẹp! 🎁</h1>
             <div id="score-board">
-                <div class="score-item">Đã bắt: <span id="caught">0</span>/31</div>
+                <div class="score-item">Đã bắt: <span id="caught">0</span>/10</div>
             </div>
         </div>
 
@@ -221,7 +221,7 @@
             flower.style.left = Math.random() * (window.innerWidth - 50) + "px";
             flower.style.top = "-50px";
 
-            const speed = 0.3 + Math.random() * 0.7;
+            const speed = 0.1 + Math.random() * 0.5;
             const id = Date.now() + Math.random();
 
             flower.addEventListener("click", () => catchFlower(flower, id));
