@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thử Thách Ngày 20/10 🌸</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 100%);
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-image: url("background.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        #game-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(2px);
+        }
+
+        #game-info {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.3);
+            z-index: 100;
+            text-align: center;
+        }
+
+        #game-info h1 {
+            color: #ff1493;
+            font-size: 28px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+        }
+
+        #score-board {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .score-item {
+            color: #ff69b4;
+        }
+
+        .flower {
+            position: absolute;
+            font-size: 40px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s;
+            z-index: 50;
+            animation: rotate 3s linear infinite;
+        }
+
+        .flower:hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #result-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+        }
+
+        #result-content {
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            text-align: center;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        #result-content h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        #result-content p {
+            font-size: 24px;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+
+        .win-screen h2 {
+            color: #ff1493;
+        }
+
+        .lose-screen h2 {
+            color: #666;
+        }
+
+        .win-message {
+            color: #ff69b4;
+            font-weight: bold;
+        }
+
+        #restart-btn {
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-size: 20px;
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+            transition: transform 0.2s;
+        }
+
+        #restart-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            z-index: 150;
+        }
+
+        @keyframes firework-explosion {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty));
+                opacity: 0;
+            }
+        }
+
+        .cute-image {
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+            border-radius: 20px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-info">
+            <h1>🌸 Bắt Lấy Bông Hoa Sẽ có Bất Ngờ Nhé Người Đẹp! 🎁</h1>
+            <div id="score-board">
+                <div class="score-item">Đã bắt: <span id="caught">0</span>/31</div>
+            </div>
+        </div>
+
+        <div id="result-screen">
+            <div id="result-content"></div>
+        </div>
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById("game-container");
+        const caughtDisplay = document.getElementById("caught");
+        const resultScreen = document.getElementById("result-screen");
+        const resultContent = document.getElementById("result-content");
+
+        let caughtFlowers = 0;
+        const totalFlowers = 31;
+        let gameActive = true;
+        let flowers = [];
+
+        const flowerEmojis = ["🌸", "🌺", "🌻", "🌷", "🌹", "💐"];
+
+        function createFlower() {
+            if (!gameActive) return;
+
+            const flower = document.createElement("div");
+            flower.className = "flower";
+            flower.textContent = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+            flower.style.left = Math.random() * (window.innerWidth - 50) + "px";
+            flower.style.top = "-50px";
+
+            const speed = 2 + Math.random() * 3;
+            const id = Date.now() + Math.random();
+
+            flower.addEventListener("click", () => catchFlower(flower, id));
+
+            gameContainer.appendChild(flower);
+
+            flowers.push({ element: flower, id: id, speed: speed });
+        }
+
+        function catchFlower(flowerElement, flowerId) {
+            if (!gameActive) return;
+
+            flowerElement.remove();
+            flowers = flowers.filter((f) => f.id !== flowerId);
+
+            caughtFlowers++;
+            caughtDisplay.textContent = caughtFlowers;
+
+            if (caughtFlowers >= totalFlowers) {
+                winGame();
+            }
+        }
+
+        function updateFlowers() {
+            if (!gameActive) return;
+
+            flowers.forEach((flower, index) => {
+                const currentTop = parseFloat(flower.element.style.top);
+                const newTop = currentTop + flower.speed;
+
+                if (newTop > window.innerHeight) {
+                    loseGame();
+                    return;
+                }
+
+                flower.element.style.top = newTop + "px";
+            });
+
+            requestAnimationFrame(updateFlowers);
+        }
+
+        function createFireworks() {
+            const colors = ["#ff1493", "#ff69b4", "#ffc0cb", "#ff6b9d", "#c71585"];
+
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight * 0.5;
+
+                    for (let j = 0; j < 30; j++) {
+                        const firework = document.createElement("div");
+                        firework.className = "firework";
+                        firework.style.left = x + "px";
+                        firework.style.top = y + "px";
+                        firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+                        const angle = (Math.PI * 2 * j) / 30;
+                        const velocity = 100 + Math.random() * 100;
+                        const tx = Math.cos(angle) * velocity;
+                        const ty = Math.sin(angle) * velocity;
+
+                        firework.style.setProperty("--tx", tx + "px");
+                        firework.style.setProperty("--ty", ty + "px");
+                        firework.style.animation = "firework-explosion 1s ease-out forwards";
+
+                        gameContainer.appendChild(firework);
+
+                        setTimeout(() => firework.remove(), 1000);
+                    }
+                }, i * 300);
+            }
+        }
+
+        function winGame() {
+            gameActive = false;
+            flowers.forEach((f) => f.element.remove());
+            flowers = [];
+
+            createFireworks();
+
+            setTimeout(() => {
+                resultContent.className = "win-screen";
+                resultContent.innerHTML = `
+                    <h2>🎉 Chúc Mừng! 🎉</h2>
+                    <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300&h=300&fit=crop" 
+                         alt="Cute flowers" class="cute-image">
+                    <p class="win-message">
+                        Chúc các bông hoa lớp 10D1 ngày 20/10 v.v 🥰! 🌸<br><br>
+                        Chúc bạn luôn xinh đẹp, rạng rỡ và hạnh phúc!<br>
+                        Mãi mãi là đóa hoa đẹp nhất trong lòng mọi người! 💖<br><br>
+                        Kiểm tra thì bài thi luôn ghi điểm 10
+                        Nụ cười rực rỡ hơn ánh nắng ban mai của mặt trời 
+                        Chúc bạn một ngày thật vui vẻ và ý nghĩa! 🎁
+                    </p>
+                    <button id="restart-btn" onclick="restartGame()">Chơi Lại</button>
+                `;
+                resultScreen.style.display = "flex";
+            }, 1500);
+        }
+
+        function loseGame() {
+            gameActive = false;
+            flowers.forEach((f) => f.element.remove());
+            flowers = [];
+
+            resultContent.className = "lose-screen";
+            resultContent.innerHTML = `
+                <h2>😢 Rất Tiếc!</h2>
+                <p>
+                    Bạn đã để bông hoa rơi mất rồi!<br><br>
+                    Hãy thử lại và cẩn thận hơn nhé! 🌸<br><br>
+                    Đừng để bất kỳ bông hoa nào rơi xuống đất!
+                </p>
+                <button id="restart-btn" onclick="restartGame()">Thử Lại</button>
+            `;
+            resultScreen.style.display = "flex";
+        }
+
+        function restartGame() {
+            caughtFlowers = 0;
+            caughtDisplay.textContent = "0";
+            gameActive = true;
+            flowers = [];
+            resultScreen.style.display = "none";
+            startGame();
+        }
+
+        function startGame() {
+            updateFlowers();
+
+            setInterval(() => {
+                if (gameActive && caughtFlowers < totalFlowers) {
+                    createFlower();
+                }
+            }, 1500);
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
