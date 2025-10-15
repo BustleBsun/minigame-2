@@ -190,13 +190,13 @@
         <div id="game-info">
             <h1>🌸 Bắt Lấy Bông Hoa Sẽ có Bất Ngờ Nhé Người Đẹp! 🎁</h1>
             <div id="score-board">
-                <div class="score-item">Đã bắt: <span id="caught">0</span>/10</div>
+                <div class="score-item">Đã bắt: <span id="caught">0</span>/15</div>
             </div>
         </div>
 
         <div id="result-screen">
             <div id="result-content"></div>
-        </div>
+        </div>https://bustlebsun.github.io/minigame-2/
     </div>
 
     <script>
@@ -206,7 +206,7 @@
         const resultContent = document.getElementById("result-content");
 
         let caughtFlowers = 0;
-        const totalFlowers = 31;
+        const totalFlowers = 15;
         let gameActive = true;
         let flowers = [];
 
@@ -221,7 +221,7 @@
             flower.style.left = Math.random() * (window.innerWidth - 50) + "px";
             flower.style.top = "-50px";
 
-            const speed = 0.1 + Math.random() * 0.5;
+            const speed = 0.3 + Math.random() * 0.7;
             const id = Date.now() + Math.random();
 
             flower.addEventListener("click", () => catchFlower(flower, id));
@@ -278,8 +278,8 @@
                         firework.style.top = y + "px";
                         firework.style.background = colors[Math.floor(Math.random() * colors.length)];
 
-                        const angle = (Math.PI * 2 * j) / 30;
-                        const velocity = 100 + Math.random() * 100;
+                        const angle = (Math.PI * 2 * j) / 25;
+                        const velocity = 100 + Math.random() * 90;
                         const tx = Math.cos(angle) * velocity;
                         const ty = Math.sin(angle) * velocity;
 
@@ -311,9 +311,9 @@
                     <p class="win-message">
                         Chúc các bông hoa lớp 10D1 ngày 20/10 v.v 🥰! 🌸<br><br>
                         Chúc bạn luôn xinh đẹp, rạng rỡ và hạnh phúc!<br>
-                        Mãi mãi là đóa hoa đẹp nhất trong lòng mọi người! 💖<br><br>
-                        Kiểm tra thì bài thi luôn ghi điểm 10
-                        Nụ cười rực rỡ hơn ánh nắng ban mai của mặt trời 
+                        Mãi mãi là đóa hoa đẹp nhất trong lòng mọi người! 💖 <br><br>
+                        Kiểm tra thì bài thi luôn ghi điểm 10        
+                        Nụ cười rực rỡ hơn ánh nắng ban mai của mặt trời      
                         Chúc bạn một ngày thật vui vẻ và ý nghĩa! 🎁
                     </p>
                     <button id="restart-btn" onclick="restartGame()">Chơi Lại</button>
