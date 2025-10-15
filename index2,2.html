@@ -76,7 +76,7 @@
             cursor: pointer;
             user-select: none;
             transition: transform 0.1s;
-            z-index: 50;
+            z-index: 150;
             animation: rotate 3s linear infinite;
         }
 
@@ -221,7 +221,7 @@
             flower.style.left = Math.random() * (window.innerWidth - 50) + "px";
             flower.style.top = "-50px";
 
-            const speed = 2 + Math.random() * 3;
+            const speed = 0.5 + Math.random() * 1;
             const id = Date.now() + Math.random();
 
             flower.addEventListener("click", () => catchFlower(flower, id));
