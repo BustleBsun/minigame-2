@@ -4,7 +4,7 @@ const resultScreen = document.getElementById("result-screen")
 const resultContent = document.getElementById("result-content")
 
 let caughtFlowers = 0
-const totalFlowers = 15
+const totalFlowers = 10
 let gameActive = true
 let flowers = []
 
@@ -76,8 +76,8 @@ function createFireworks() {
         firework.style.top = y + "px"
         firework.style.background = colors[Math.floor(Math.random() * colors.length)]
 
-        const angle = (Math.PI * 2 * j) / 30
-        const velocity = 100 + Math.random() * 100
+        const angle = (Math.PI * 2 * j) / 20
+        const velocity = 100 + Math.random() * 90
         const tx = Math.cos(angle) * velocity
         const ty = Math.sin(angle) * velocity
 
